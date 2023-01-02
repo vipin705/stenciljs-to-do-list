@@ -21,7 +21,7 @@ export class MyToDOList {
       return;
     }
     this.taskValue = this.taskInput.value;
-    this.addedTasks.push(this.taskValue);
+    this.addedTasks = [...this.addedTasks, this.taskValue];
     this.taskInput.value = '';
   };
 
