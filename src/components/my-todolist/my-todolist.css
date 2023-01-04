@@ -105,6 +105,9 @@ form button:active {
     transition: all 0.5s ease-in;
 
 }
+.item:last-child{
+    border: none;
+}
 
 .task-desc{
     width: 80%;

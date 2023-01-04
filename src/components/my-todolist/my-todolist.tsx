@@ -23,6 +23,7 @@ export class MyToDOList {
     this.taskValue = this.taskInput.value;
     this.addedTasks = [...this.addedTasks, this.taskValue];
     this.taskInput.value = '';
+    this.addToLocalStorage(this.addedTasks);
   };
 
   onTaskDelete(tasknumber: number) {
@@ -33,6 +34,7 @@ export class MyToDOList {
   removeFromList(event: CustomEvent) {
     this.addedTasks.length > 1 ? this.addedTasks.splice(event.detail, 1) : this.addedTasks.pop();
     this.addedTasks = [...this.addedTasks];
+    this.addToLocalStorage(this.addedTasks);
   }
 
   @Listen('completedTaskNumber')
@@ -42,6 +44,14 @@ export class MyToDOList {
   completeTask = (taskNumber: number) => {
     this.completedTaskNumber.emit(taskNumber);
   };
+
+  addToLocalStorage(tasks: any[]) {
+    localStorage.setItem('to-do-list', JSON.stringify(tasks));
+  }
+
+  componentWillLoad() {
+    this.addedTasks = JSON.parse(localStorage.getItem('to-do-list'));
+  }
 
   render() {
     return [
