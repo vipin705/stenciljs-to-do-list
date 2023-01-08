@@ -41,9 +41,19 @@ export class MyToDOList {
   markTaskComplete(event: CustomEvent) {
     this.el.shadowRoot.querySelectorAll('.item')[event.detail].classList.add('complete-task');
   }
+
+  @Listen('clickedPage', { target: 'body' })
+  displayPageItems(event: CustomEvent) {
+    console.log(event.detail);
+  }
   completeTask = (taskNumber: number) => {
     this.completedTaskNumber.emit(taskNumber);
   };
+
+  createPages() {
+    const pages = this.addedTasks.length % 5 === 0 ? Math.floor(this.addedTasks.length / 5) : Math.floor(this.addedTasks.length / 5) + 1;
+    return pages;
+  }
 
   addToLocalStorage(tasks: any[]) {
     localStorage.setItem('to-do-list', JSON.stringify(tasks));
@@ -85,6 +95,7 @@ export class MyToDOList {
               })}
           </ul>
         </section>
+        {this.addedTasks.length > 5 && <my-paginator pages={this.createPages()}></my-paginator>}
       </div>,
     ];
   }

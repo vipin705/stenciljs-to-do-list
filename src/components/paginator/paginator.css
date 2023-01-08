@@ -1,0 +1,24 @@
+:host{
+    margin: 1rem 1rem 2rem 0rem;
+    justify-content: flex-end;
+    display: flex;
+    transition: all 0.3 ease-in;
+}
+.paginator{
+    display: flex;
+    gap: 1rem;
+}
+
+.paginator div{
+    display: flex;
+    flex-wrap: wrap;
+    width: 3rem;
+    height: 3rem;
+    border: none;
+    border-radius: 50%;
+    background-color: #dea242;
+    text-align: center;
+    font-size: 1.5rem;
+    justify-content: center;
+    align-content: center;
+}
