@@ -9,7 +9,7 @@ export class MyToDOList {
   taskInput: HTMLInputElement;
   @State() taskValue: string;
   @State() addedTasks: Array<any> = [];
-  taskItem: HTMLElement;
+  taskList: HTMLElement;
   @Element() el: HTMLElement;
 
   @Event({ bubbles: true, composed: true }) removeTask: EventEmitter<number>;
@@ -26,10 +26,6 @@ export class MyToDOList {
     this.addToLocalStorage(this.addedTasks);
   };
 
-  onTaskDelete(tasknumber: number) {
-    this.removeTask.emit(tasknumber);
-  }
-
   @Listen('removeTask', { target: 'body' })
   removeFromList(event: CustomEvent) {
     this.addedTasks.length > 1 ? this.addedTasks.splice(event.detail, 1) : this.addedTasks.pop();
@@ -39,16 +35,13 @@ export class MyToDOList {
 
   @Listen('completedTaskNumber')
   markTaskComplete(event: CustomEvent) {
-    this.el.shadowRoot.querySelectorAll('.item')[event.detail].classList.add('complete-task');
+    this.taskList.shadowRoot.querySelectorAll('.item')[event.detail].classList.add('complete-task');
   }
 
   @Listen('clickedPage', { target: 'body' })
   displayPageItems(event: CustomEvent) {
     console.log(event.detail);
   }
-  completeTask = (taskNumber: number) => {
-    this.completedTaskNumber.emit(taskNumber);
-  };
 
   createPages() {
     const pages = this.addedTasks.length % 5 === 0 ? Math.floor(this.addedTasks.length / 5) : Math.floor(this.addedTasks.length / 5) + 1;
@@ -65,35 +58,14 @@ export class MyToDOList {
 
   render() {
     return [
-      <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>,
-      <script src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>,
       <div class="todolist">
         <section class="main"> My to do list</section>
         <section class="content">
-          <form class="addtask" onSubmit={this.getTask.bind(this)}>
+          <form class="addtask" onSubmit={event => this.getTask(event)}>
             <input type="text" placeholder="add your task..." class="task" ref={ele => (this.taskInput = ele)} />
             <button>Add</button>
           </form>
-          <ul class="listitems">
-            {this.addedTasks &&
-              this.addedTasks.map((task, index) => {
-                return [
-                  <li
-                    class="item"
-                    ref={(ele: HTMLElement) => {
-                      this.taskItem = ele;
-                    }}
-                  >
-                    <div class="icon-container">
-                      <span>{index + 1}</span>
-                      <ion-icon class="icon task-icon" name="checkmark-circle-outline" onClick={this.completeTask.bind(this, index)}></ion-icon>
-                    </div>
-                    <div class="task-desc">{task}</div>
-                    <ion-icon class="icon" name="trash-outline" onClick={this.onTaskDelete.bind(this, index)}></ion-icon>
-                  </li>,
-                ];
-              })}
-          </ul>
+          <my-list-view listItems={this.addedTasks} ref={ele => (this.taskList = ele)}></my-list-view>
         </section>
         {this.addedTasks.length > 5 && <my-paginator pages={this.createPages()}></my-paginator>}
       </div>,
